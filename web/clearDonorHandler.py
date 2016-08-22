@@ -63,7 +63,19 @@ def POSTClearDonor():
 				# Delete custom role from server
 				coroutineHelper.syncCoroutine(glob.client.delete_role(discordServer, customRole))
 
-		# Remove website and ingame expired donors
+		# Remove donor badge on expired donors
+		expired = glob.db.fetchAll("SELECT users_stats.badges_shown, users.id FROM users LEFT JOIN users_stats ON users.id = users_stats.id WHERE users.privileges & 4 > 0 AND users.donor_expire <= %s", [int(time.time())])
+		for i in expired:
+			badges = i["badges_shown"].split(",")
+			j = 0
+			while j < len(badges):
+				if badges[j] == "14":
+					badges[j] = "0"
+				j+=1
+			badges = ",".join(badges)
+			glob.db.execute("UPDATE users_stats SET badges_shown = %s WHERE id = %s LIMIT 1", [badges, i["id"]])
+
+		# Remove website and ingame expired donor privilege
 		glob.db.execute("UPDATE users SET privileges = privileges & ~4 WHERE privileges & 4 > 0 AND donor_expire <= %s", [int(time.time())])
 	except exceptions.invalidSecretKey:
 		data["status"] = 403
@@ -74,6 +86,7 @@ def POSTClearDonor():
 	except:
 		data["status"] = 500
 		data["message"] = "Unhandled exception"
+		raise
 	finally:
 		jsonData = json.dumps(data)
 		yield jsonData
