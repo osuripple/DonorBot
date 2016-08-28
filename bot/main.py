@@ -5,6 +5,7 @@ from objects import glob
 from helpers import consoleHelper as console
 from constants import bcolors
 from bot import role
+from bot import myColor
 
 COMMANDS = [
 	#{
@@ -15,6 +16,15 @@ COMMANDS = [
 		"trigger": "!role",
 		"syntax": "<color> <name>",
 		"callback": role.handle
+	}, {
+		"trigger": "!mycolor",
+		"callback": myColor.handle
+	}, {
+		"trigger": "!mycolour",
+		"callback": myColor.handle
+	}, {
+		"trigger": "!color",
+		"callback": myColor.handle
 	}
 ]
 

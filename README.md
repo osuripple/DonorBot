@@ -2,7 +2,7 @@
 
 ## Requirements
 - Python 3.5
-- MySQLdb (`mysqlclient` or `mysql-python`)
+- MySQLdb (`mysqlclient`)
 - Discord.py
 - Bottle
 - Gevent
@@ -10,7 +10,7 @@
 ## Setting up
 Install the dependencies
 ```
-$ pip install discord.py mysqlclient bottle gevent
+$ pip install -r requirements.txt
 ```
 Then run the bot once to create the config file
 ```
