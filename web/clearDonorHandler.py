@@ -13,7 +13,7 @@ def POSTClearDonor():
 	}
 	try:
 		# Get discord expired donors
-		expired = glob.db.fetchAll("SELECT discord_roles.discordid, discord_roles.roleid FROM discord_roles INNER JOIN users ON users.id = discord_roles.userid WHERE users.privileges & 4 > 0 AND donor_expire <= %s", [int(time.time())])
+		expired = glob.db.fetchAll("SELECT discord_roles.discordid, discord_roles.roleid, users.id FROM discord_roles RIGHT JOIN users ON users.id = discord_roles.userid WHERE users.privileges & 4 > 0 AND donor_expire <= %s", [int(time.time())])
 
 		# Do all the work if the query has returned something
 		if expired != None:
@@ -35,8 +35,14 @@ def POSTClearDonor():
 
 			# Remove donators and custom roles to expired donors
 			for i in expired:
+				print("Removing donor for user {}".format(i["id"]))
+
+				# First, remove donor badge
+				glob.db.execute("DELETE FROM user_badges WHERE user = %s AND badge = '14'", [i["id"]])
+
+				# Then, do discord stuff
 				# Make sure the discord id is valid
-				if i["discordid"] == 0:
+				if i["discordid"] == None or i["discordid"] == 0:
 					continue
 
 				# Get the user and make sure he is still inside the server	
@@ -62,18 +68,6 @@ def POSTClearDonor():
 
 				# Delete custom role from server
 				coroutineHelper.syncCoroutine(glob.client.delete_role(discordServer, customRole))
-
-		# Remove donor badge on expired donors
-		expired = glob.db.fetchAll("SELECT users_stats.badges_shown, users.id FROM users LEFT JOIN users_stats ON users.id = users_stats.id WHERE users.privileges & 4 > 0 AND users.donor_expire <= %s", [int(time.time())])
-		for i in expired:
-			badges = i["badges_shown"].split(",")
-			j = 0
-			while j < len(badges):
-				if badges[j] == "14":
-					badges[j] = "0"
-				j+=1
-			badges = ",".join(badges)
-			glob.db.execute("UPDATE users_stats SET badges_shown = %s WHERE id = %s LIMIT 1", [badges, i["id"]])
 
 		# Remove website and ingame expired donor privilege
 		glob.db.execute("UPDATE users SET privileges = privileges & ~4 WHERE privileges & 4 > 0 AND donor_expire <= %s", [int(time.time())])
