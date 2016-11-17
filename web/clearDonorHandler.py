@@ -38,7 +38,7 @@ def POSTClearDonor():
 				print("Removing donor for user {}".format(i["id"]))
 
 				# First, remove donor badge
-				glob.db.execute("DELETE FROM user_badges WHERE user = %s AND badge = '14'", [i["id"]])
+				glob.db.execute("DELETE FROM user_badges WHERE user = %s AND badge = '14' LIMIT 1", [i["id"]])
 
 				# Then, do discord stuff
 				# Make sure the discord id is valid
@@ -53,8 +53,9 @@ def POSTClearDonor():
 				# Remove donators role
 				coroutineHelper.syncCoroutine(glob.client.remove_roles(discordUser, donorRole))
 
-				# Update db
-				glob.db.execute("UPDATE discord_roles SET roleid = 0 WHERE discordid = %s", [i["discordid"]])
+				# Unlink discord and ripple accounts
+				glob.db.execute("DELETE FROM discord_roles WHERE discordid = %s", [i["discordid"]])
+				#glob.db.execute("UPDATE discord_roles SET roleid = 0 WHERE discordid = %s LIMIT 1", [i["discordid"]])
 
 				# Get the custom role
 				customRole = None
