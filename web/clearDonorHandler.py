@@ -54,8 +54,10 @@ def POSTClearDonor():
 				coroutineHelper.syncCoroutine(glob.client.remove_roles(discordUser, donorRole))
 
 				# Unlink discord and ripple accounts
-				glob.db.execute("DELETE FROM discord_roles WHERE discordid = %s", [i["discordid"]])
-				#glob.db.execute("UPDATE discord_roles SET roleid = 0 WHERE discordid = %s LIMIT 1", [i["discordid"]])
+				glob.db.execute("DELETE FROM discord_roles WHERE discordid = %s LIMIT 1", [i["discordid"]])
+
+				# Delete profile background
+				glob.db.execute("DELETE FROM profile_backgrounds WHERE uid = %s LIMIT 1", [i["userid"]])
 
 				# Get the custom role
 				customRole = None
