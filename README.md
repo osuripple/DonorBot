@@ -1,5 +1,8 @@
 ## DonorBot
 
+- Origin: https://git.zxq.co/ripple/DonorBot
+- Mirror: https://github.com/osuripple/DonorBot
+
 ## Requirements
 - Python 3.5
 - MySQLdb (`mysqlclient`)
