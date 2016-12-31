@@ -44,7 +44,6 @@ async def handle(message):
 		rolePermissions.change_nickname = True
 
 		# Get donators role (to set right position)
-		print(str(message.server.roles))
 		donorRole = None
 		for i in message.server.roles:
 			if i.name.lower() == "donators":
