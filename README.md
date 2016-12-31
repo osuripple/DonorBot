@@ -3,6 +3,8 @@
 - Origin: https://git.zxq.co/ripple/DonorBot
 - Mirror: https://github.com/osuripple/DonorBot
 
+This Discord bot handles custom roles (and custom username colors) for Ripple donors.
+
 ## Requirements
 - Python 3.5
 - MySQLdb (`mysqlclient`)
@@ -30,5 +32,4 @@ $ python3 donorbot.py
 
 ## License
 All code in this repository is licensed under the GNU AGPL 3 License.  
-See the "LICENSE" file for more information  
-This project contains code taken by reference from [miniircd](https://github.com/jrosdahl/miniircd) by Joel Rosdahl.
+See the "LICENSE" file for more information
