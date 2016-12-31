@@ -1,4 +1,4 @@
-## DonorBot
+## DonorBot [![Code Health](https://landscape.io/github/osuripple/DonorBot/master/landscape.svg?style=flat)](https://landscape.io/github/osuripple/DonorBot/master)
 
 - Origin: https://git.zxq.co/ripple/DonorBot
 - Mirror: https://github.com/osuripple/DonorBot
