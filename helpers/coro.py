@@ -6,6 +6,6 @@ def sync_coroutine(coro):
 	fut = asyncio.run_coroutine_threadsafe(coro, glob.client.loop)
 	try:
 		fut.result()
-	except:
+	except (asyncio.CancelledError, asyncio.TimeoutError):
 		pass
 	return
