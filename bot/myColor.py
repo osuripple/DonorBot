@@ -17,7 +17,7 @@ async def handle(message):
 			role = i
 
 	# Make sure role is valid
-	if role == None:
+	if role is None:
 		await glob.client.send_message(message.channel, "**You don't have a custom role yet.** Please set it using !role command.")
 		return
 

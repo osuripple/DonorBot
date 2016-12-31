@@ -1,6 +1,7 @@
-from objects import glob
 import re
 import discord
+
+from objects import glob
 
 def isHexColor(col):
 	hexRegex = re.compile("^(?:[0-9a-fA-F]{3}){1,2}$")
@@ -12,6 +13,11 @@ async def handle(message):
 	userInfo = glob.db.fetch("SELECT users.privileges, discord_roles.roleid FROM users LEFT JOIN discord_roles ON users.id = discord_roles.userid WHERE discordid = %s LIMIT 1", [discordID])
 	if userInfo == None or userInfo["privileges"] & 4 == 0:
 		await glob.client.send_message(message.channel, "**You're not allowed to use this command**, only donors can use it.")
+		return
+
+	# Make sure the user is not abusing the command
+	if not glob.rate_limiters["!role"].check(discordID):
+		await glob.client.send_message(message.channel, "**You can use the !role command only once every 5 minutes.** Please try again later.")
 		return
 
 	# Get arguments
@@ -38,6 +44,7 @@ async def handle(message):
 		rolePermissions.change_nickname = True
 
 		# Get donators role (to set right position)
+		print(str(message.server.roles))
 		donorRole = None
 		for i in message.server.roles:
 			if i.name.lower() == "donators":
@@ -50,7 +57,7 @@ async def handle(message):
 		role = await glob.client.create_role(message.server, name=roleName, permissions=rolePermissions, colour=discord.Colour(roleColor), hoist=False, mentionable=False)
 		await glob.client.move_role(message.server, role, donorRole.position)
 		await glob.client.add_roles(message.author, role)
-		glob.db.execute("UPDATE discord_roles SET roleid = %s WHERE discordid = %s", [role.id, message.author.id])
+		glob.db.execute("UPDATE discord_roles SET roleid = %s WHERE discordid = %s LIMIT 1", [role.id, message.author.id])
 		await glob.client.send_message(message.channel, "**Your role has been created successfully! Welcome to the donors club!**")
 		return
 
@@ -63,7 +70,7 @@ async def handle(message):
 
 		if role == None:
 			# Role not found, reset role in db and create a new one
-			glob.db.execute("UPDATE discord_roles SET roleid = 0 WHERE discordid = %s", [message.author.id])
+			glob.db.execute("UPDATE discord_roles SET roleid = 0 WHERE discordid = %s LIMIT 1", [message.author.id])
 			return await createCustomRole()
 
 		# Role object found, update it

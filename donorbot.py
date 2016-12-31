@@ -1,19 +1,20 @@
-import discord
+from gevent import monkey as brit_monkey
+brit_monkey.patch_all()
 import os
 import sys
 import threading
+
+import discord
+import bottle
 
 from helpers import consoleHelper as console
 from objects import glob
 from objects import config
 from constants import bcolors
 from helpers import databaseHelper
-import bottle
-from gevent import monkey as brit_monkey
-brit_monkey.patch_all()
-
 from web import giveDonorHandler
 from web import clearDonorHandler
+from objects import rate_limit
 
 def bottleWorker(host, port):
 	bottle.run(host=host, port=port, server="gevent")
@@ -64,6 +65,9 @@ if __name__ == "__main__":
 	except:
 		console.error()
 		raise
+
+	# Create rate limiters
+	glob.rate_limiters["!role"] = rate_limit.RateLimiter(1, 300)
 
 	# Start tornado
 	console.printN("> Starting Bottle...")

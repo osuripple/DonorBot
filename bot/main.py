@@ -7,32 +7,14 @@ from constants import bcolors
 from bot import role
 from bot import myColor
 
-COMMANDS = [
-	#{
-	#	"trigger": "!hello",
-	#	"callback": lambda message: glob.client.send_message(message.channel, "Hi!")
-	#},
-	{
-		"trigger": "!role",
-		"syntax": "<color> <name>",
-		"callback": role.handle
-	}, {
-		"trigger": "!mycolor",
-		"callback": myColor.handle
-	}, {
-		"trigger": "!mycolour",
-		"callback": myColor.handle
-	}, {
-		"trigger": "!color",
-		"callback": myColor.handle
-	}
-]
+from objects import command
 
-# Commands list default values
-for i in COMMANDS:
-	i.setdefault("trigger", None)
-	i.setdefault("syntax", "")
-	i.setdefault("callback", lambda message: glob.client.send_message(message.channel, "No callback function set for this command."))
+COMMANDS = {
+	"!role": command.Command(role.handle, "<color> <name>"),
+	"!mycolor": command.Command(myColor.handle),
+	"!mycolour": command.Command(myColor.handle),
+	"!color": command.Command(myColor.handle)
+}
 
 @glob.client.event
 async def on_ready():
@@ -43,21 +25,21 @@ async def on_ready():
 @glob.client.event
 async def on_message(message):
 	# The bot has received a message
-	for i in COMMANDS:
-		if message.content.startswith(i["trigger"]):
+	for trigger, command in COMMANDS.items():
+		if message.content.startswith(trigger):
 			# This message has triggered the 'i' command
-			if i["syntax"] != "":
+			if command.syntax != "":
 				# Split 'passed' and 'syntax' arguments
 				args = message.content.split(" ")[1:]
-				requiredArgs = i["syntax"].split(" ")
+				requiredArgs = command.syntax.split(" ")
 
 				# Syntax check
 				if len(args) < len(requiredArgs):
 					# Invalid syntax
-					await glob.client.send_message(message.channel, "Wrong syntax: {} {}".format(i["trigger"], i["syntax"]))
+					await glob.client.send_message(message.channel, "Wrong syntax: {} {}".format(trigger, command.syntax))
 					return
 
 			# Syntax is valid. Run the callback
 			# We pass the message split by spaces if this command has syntax
 			# Otherwise, we pass the message content
-			await i["callback"](message)
+			await command.callback(message)
