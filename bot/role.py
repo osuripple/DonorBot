@@ -48,7 +48,7 @@ async def handle(message):
 		for i in message.server.roles:
 			if i.name.lower() == "donators":
 				donor_role = i
-		if donor_role == None:
+		if donor_role is None:
 			await glob.client.send_message(message.channel, "**Error while creating your role!** Missing 'donators' role. Please contact a developer.")
 			return
 
@@ -60,11 +60,11 @@ async def handle(message):
 		await glob.client.send_message(message.channel, "**Your role has been created successfully! Welcome to the donors club!**")
 		return
 
-	async def edit_custom_role(roleID):
+	async def edit_custom_role(role_id):
 		# Get role object
 		role = None
 		for i in message.author.roles:
-			if i.id == roleID:
+			if i.id == role_id:
 				role = i
 
 		if role is None:

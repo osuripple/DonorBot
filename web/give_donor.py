@@ -23,25 +23,25 @@ def give_donor_post():
 				raise exceptions.InvalidSecretKeyError()
 
 			# Check if the user if in the server
-			discordServer = glob.client.get_server(glob.config.config["discord"]["server_id"])
-			if discordServer == None:
+			discord_server = glob.client.get_server(glob.config.config["discord"]["server_id"])
+			if discord_server is None:
 				raise exceptions.BotNotInServerError()
-			discordUser = discordServer.get_member(bottle.request.forms.get("discord_id"))
-			if discordUser == None:
+			discord_user = discord_server.get_member(bottle.request.forms.get("discord_id"))
+			if discord_user is None:
 				raise exceptions.NotInServerError()
 
 			# Get donators role
-			donorRole = None
-			for i in discordServer.roles:
+			donor_role = None
+			for i in discord_server.roles:
 				if i.name.lower() == "donators":
-					donorRole = i
+					donor_role = i
 
 			# Make sure the donators role exists
-			if donorRole == None:
+			if donor_role is None:
 				raise exceptions.NoRoleError()
 
 			# Give donators role to the user
-			coro.sync_coroutine(glob.client.add_roles(discordUser, donorRole))
+			coro.sync_coroutine(glob.client.add_roles(discord_user, donor_role))
 		except exceptions.InvalidArgumentsError:
 			data["status"] = 400
 			data["message"] = "Missing/invalid arguments"
@@ -61,5 +61,5 @@ def give_donor_post():
 			data["status"] = 500
 			data["message"] = "Unhandled exception"
 		finally:
-			jsonData = json.dumps(data)
-			yield jsonData
+			json_data = json.dumps(data)
+			yield json_data

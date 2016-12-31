@@ -17,7 +17,7 @@ from objects import rate_limit
 from web import give_donor
 from web import clear_donor
 
-def bottleWorker(host, port):
+def bottle_worker(host, port):
 	bottle.run(host=host, port=port, server="gevent")
 
 if __name__ == "__main__":
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 		raise
 
 	# Start Bottle in a separate thread
-	threading.Thread(target=bottleWorker, args=(serverHost, serverPort,)).start()
+	threading.Thread(target=bottle_worker, args=(serverHost, serverPort,)).start()
 	console.done()
 	console.colored("Bottle listening for HTTP clients on :{}".format(serverPort), bcolors.GREEN)
 

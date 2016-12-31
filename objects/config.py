@@ -55,7 +55,7 @@ class Config:
 
 			# Loaded successfully
 			self.status = ConfigStatus.VALID
-		except:
+		except (json.JSONDecodeError, IOError):
 			# Error while loading the file
 			return
 

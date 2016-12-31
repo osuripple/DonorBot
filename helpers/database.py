@@ -82,7 +82,7 @@ class Db:
 				cursor.close()
 			worker.lock.release()
 
-	def fetch(self, query, params = (), all = False):
+	def fetch(self, query, params = (), _all = False):
 		"""
 		Fetch a single value from db that matches given query
 
@@ -93,18 +93,19 @@ class Db:
 		# Get a worker and acquire its lock
 		worker = self.get_worker()
 		worker.lock.acquire()
+		cursor = None
 
 		try:
 			# Create cursor, execute the query and fetch one/all result(s)
 			cursor = worker.connection.cursor(MySQLdb.cursors.DictCursor)
 			cursor.execute(query, params)
-			if all == True:
+			if _all:
 				return cursor.fetchall()
 			else:
 				return cursor.fetchone()
 		finally:
 			# Close the cursor and release worker's lock
-			if cursor:
+			if cursor is not None:
 				cursor.close()
 			worker.lock.release()
 

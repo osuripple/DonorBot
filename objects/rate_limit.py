@@ -1,7 +1,7 @@
 import time
 
 class RateLimiterClient:
-	def __init__(self, client_id, rate, per):
+	def __init__(self, rate, per):
 		"""
 		Initialise a rate limiter for a single client
 
@@ -59,5 +59,5 @@ class RateLimiter:
 				 False if the client has surpassed the rate limit
 		"""
 		if client_id not in self.clients:
-			self.clients[client_id] = RateLimiterClient(client_id, self.rate, self.per)
+			self.clients[client_id] = RateLimiterClient(self.rate, self.per)
 		return self.clients[client_id].check(increase)

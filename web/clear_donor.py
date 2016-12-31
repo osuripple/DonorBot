@@ -43,12 +43,12 @@ def clear_donor_post():
 
 				# Then, do discord stuff
 				# Make sure the discord id is valid
-				if i["discordid"] == None or i["discordid"] == 0:
+				if i["discordid"] is None or i["discordid"] == 0:
 					continue
 
 				# Get the user and make sure he is still inside the server	
 				discord_user = discord_server.get_member(str(i["discordid"]))
-				if discord_user == None:
+				if discord_user is None:
 					continue
 
 				# Remove donators role
@@ -86,5 +86,5 @@ def clear_donor_post():
 		data["message"] = "Unhandled exception"
 		raise
 	finally:
-		jsonData = json.dumps(data)
-		yield jsonData
+		json_data = json.dumps(data)
+		yield json_data
