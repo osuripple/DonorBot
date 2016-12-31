@@ -1,14 +1,14 @@
-class invalidArguments(Exception):
+class InvalidArgumentsError(Exception):
 	pass
 
-class invalidSecretKey(Exception):
+class InvalidSecretKeyError(Exception):
 	pass
 
-class notInServer(Exception):
+class NotInServerError(Exception):
 	pass
 
-class noRole(Exception):
+class NoRoleError(Exception):
 	pass
 
-class botNotInServer(Exception):
+class BotNotInServerError(Exception):
 	pass

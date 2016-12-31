@@ -1,19 +1,19 @@
 import json
 import os
 
-class configStatus:
+class ConfigStatus:
 	DOESNT_EXIST = -1
 	INVALID = -2
 	INVALID_SYNTAX = -3
 	VALID = 1
 
-class config:
+class Config:
 	def __init__(self):
 		"""
 		Initializes and loads a config file object
 		"""
 		self.config = {}
-		self.status = configStatus.INVALID_SYNTAX
+		self.status = ConfigStatus.INVALID_SYNTAX
 		self.structure = {
 			"database": {
 				"host": "",
@@ -36,8 +36,8 @@ class config:
 	def load(self):
 		try:
 			# Make sure the file exists
-			if os.path.isfile("config.json") == False:
-				self.status = configStatus.DOESNT_EXIST
+			if not os.path.isfile("config.json"):
+				self.status = ConfigStatus.DOESNT_EXIST
 				return
 
 			# Read and parse the file
@@ -45,16 +45,16 @@ class config:
 				with open("config.json", "r") as f:
 					self.config = json.loads(f.read())
 			except ValueError:
-				self.status = configStatus.INVALID_SYNTAX
+				self.status = ConfigStatus.INVALID_SYNTAX
 				return
 
 			# Check config file structure
-			if self.check() == False:
-				self.status = configStatus.INVALID
+			if not self.check():
+				self.status = ConfigStatus.INVALID
 				return
 
 			# Loaded successfully
-			self.status = configStatus.VALID
+			self.status = ConfigStatus.VALID
 		except:
 			# Error while loading the file
 			return
@@ -76,7 +76,7 @@ class config:
 		return shape(self.config) == shape(self.structure)
 
 
-	def writeDefault(self):
+	def write_default(self):
 		"""
 		Overwrites config.json with a default one
 		"""

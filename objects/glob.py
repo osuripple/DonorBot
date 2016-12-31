@@ -1,8 +1,9 @@
-from objects import fileLocks
+from objects import file_locks
 
+config = None
 client = None
 db = None
-fLocks = fileLocks.fileLocks()
+f_locks = file_locks.FileLocks()
 debug = False
 secret = ""
 rate_limiters = {}

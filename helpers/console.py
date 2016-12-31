@@ -18,5 +18,5 @@ def warning(space=True):
 	s += "Warning!"
 	colored(s, bcolors.YELLOW)
 
-def printN(s):
+def printn(s):
 	print(s, end="")

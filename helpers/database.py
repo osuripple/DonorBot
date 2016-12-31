@@ -1,7 +1,7 @@
 import MySQLdb
 import threading
 
-class mysqlWorker:
+class Worker:
 	"""
 	Instance of a pettirosso meme
 	"""
@@ -21,7 +21,7 @@ class mysqlWorker:
 		self.ready = True
 		self.lock = threading.Lock()
 
-class db:
+class Db:
 	"""
 	A MySQL db connection with multiple workers
 	"""
@@ -44,9 +44,9 @@ class db:
 		self.workersNumber = workers
 		for i in range(0,self.workersNumber):
 			print(".", end="")
-			self.workers.append(mysqlWorker(i, host, username, password, database))
+			self.workers.append(Worker(i, host, username, password, database))
 
-	def getWorker(self):
+	def get_worker(self):
 		"""
 		Return a worker object (round-robin way)
 
@@ -67,8 +67,9 @@ class db:
 		params -- Parameters list. First element replaces first %s and so on. Optional.
 		"""
 		# Get a worker and acquire its lock
-		worker = self.getWorker()
+		worker = self.get_worker()
 		worker.lock.acquire()
+		cursor = None
 
 		try:
 			# Create cursor, execute query and commit
@@ -77,7 +78,7 @@ class db:
 			return cursor.lastrowid
 		finally:
 			# Close the cursor and release worker's lock
-			if cursor:
+			if cursor is not None:
 				cursor.close()
 			worker.lock.release()
 
@@ -90,7 +91,7 @@ class db:
 		all -- Fetch one or all values. Used internally. Use fetchAll if you want to fetch all values.
 		"""
 		# Get a worker and acquire its lock
-		worker = self.getWorker()
+		worker = self.get_worker()
 		worker.lock.acquire()
 
 		try:
@@ -107,9 +108,9 @@ class db:
 				cursor.close()
 			worker.lock.release()
 
-	def fetchAll(self, query, params = ()):
+	def fetch_all(self, query, params = ()):
 		"""
-		Fetch all values from db that matche given query.
+		Fetch all values from db that match given query.
 		Calls self.fetch with all = True.
 
 		query -- Query to execute. You can bind parameters with %s
