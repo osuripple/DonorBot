@@ -58,7 +58,7 @@ def clear_donor_post():
 				glob.db.execute("DELETE FROM discord_roles WHERE discordid = %s LIMIT 1", [i["discordid"]])
 
 				# Delete profile background
-				glob.db.execute("DELETE FROM profile_backgrounds WHERE uid = %s LIMIT 1", [i["userid"]])
+				glob.db.execute("DELETE FROM profile_backgrounds WHERE uid = %s LIMIT 1", [i["id"]])
 
 				# Get the custom role
 				custom_role = None
