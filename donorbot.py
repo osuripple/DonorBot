@@ -62,6 +62,7 @@ if __name__ == "__main__":
 			db_config["username"],
 			db_config["password"],
 			db_config["database"],
+			1
 		)
 		console.done()
 	except (ValueError, MySQLdb.Error):
