@@ -66,7 +66,7 @@ class ConnectionsPool:
 		db = MySQLdb.connect(*self.config)
 		db.autocommit(True)
 		#db.cursor(MySQLdb.cursors.DictCursor).execute("SET SESSION query_cache_type = 0;")
-		conn = worker(db, temporary)
+		conn = Worker(db, temporary)
 		return conn
 
 	def fill_pool(self, new_connections=0):
