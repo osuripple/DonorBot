@@ -1,4 +1,4 @@
-discord.py
-bottle
-gevent
-mysqlclient
+discord.py==0.16.12
+bottle==0.12.13
+gevent==1.2.2
+mysqlclient==1.3.9
